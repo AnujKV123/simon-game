@@ -1,5 +1,5 @@
 // React Imports...
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 // App Imports...
 import Heading from "./components/Heading";
@@ -17,7 +17,7 @@ function App() {
   const [randomChosenColour, setRandomChosenColour] = useState(null)
   const [wrongAnswer, setWrongAnswer] = useState(false);
   const [isStarted, setIsStarted] = useState(false)
-  const buttonColour = ["red", "blue", "green", "yellow"];
+  
   const wrongSound = new Audio(wrong);
 
 
@@ -27,13 +27,14 @@ function App() {
   };
 
 
-  const nextSequence = () => {
+  const nextSequence = useCallback(() => {
     // To Generate next sequence 
+    const buttonColour = ["red", "blue", "green", "yellow"];
     setHeading(null);
     setLevel(level + 1);
     setUserClickedPattern([]);
     setRandomChosenColour(buttonColour[Math.floor(Math.random() * 4)]);
-  };
+  }, [level]);
 
   const checkAnswer = (i) => {
     // To check the user answer 
@@ -77,7 +78,7 @@ function App() {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [setIsStarted]);
+  }, [setIsStarted, nextSequence]);
 
   useEffect(() => {
     // To re-render component after a new color is choosen
